@@ -547,7 +547,7 @@ function downloadOrderPdf(clientName, items, total, now) {
   // Branded header band
   doc.setFillColor(...BRAND_COLOR);
   doc.rect(0, 0, pageWidth, 26, "F");
-  placeImageRight(doc, textToImage("משקאות מג'דלי", { fontPx: 46, color: "#ffffff" }), pageWidth - margin, 12, 7);
+  placeImageRight(doc, textToImage("משקאות מגאדלי", { fontPx: 46, color: "#ffffff" }), pageWidth - margin, 12, 7);
   placeImageRight(doc, textToImage("אישור הזמנה", { fontPx: 26, color: "#ffffff", fontWeight: "normal" }), pageWidth - margin, 21, 3.8);
 
   // Client / date / time

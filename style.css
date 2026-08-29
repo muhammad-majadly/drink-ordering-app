@@ -16,6 +16,13 @@ body {
   padding: 16px 20px;
 }
 
+.company-name {
+  font-size: 16px;
+  font-weight: 700;
+  opacity: 0.9;
+  margin-bottom: 4px;
+}
+
 .app-header h1 {
   margin: 0 0 12px 0;
   font-size: 26px;
