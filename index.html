@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>הזמנת משקאות</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <h1>הזמנה חדשה</h1>
+
+  <div class="client-section">
+    <label for="clientSelect">לקוח / חנות</label>
+    <div class="client-row">
+      <select id="clientSelect">
+        <option value="">-- בחר לקוח --</option>
+      </select>
+      <input type="text" id="clientInput" placeholder="או הקלד שם לקוח...">
+    </div>
+  </div>
+</header>
+
+<main class="app-main">
+
+  <div class="catalog">
+    <div class="search-row">
+      <input type="text" id="searchBox" placeholder="חיפוש מוצרים...">
+    </div>
+
+    <div class="category-bar" id="categoryBar">
+      <!-- category buttons injected by JS -->
+    </div>
+
+    <div class="add-product-row">
+      <button class="btn-add-product" id="addProductToggleBtn">+ הוסף מוצר חדש</button>
+    </div>
+
+    <div class="add-product-form" id="addProductForm" hidden>
+      <input type="text" id="newProductName" placeholder="שם המוצר">
+      <input type="number" id="newProductPrice" placeholder="מחיר (₪)" min="0" step="0.5">
+      <select id="newProductCategory"></select>
+      <div class="add-product-actions">
+        <button class="btn-save-product" id="saveNewProductBtn">הוסף מוצר</button>
+        <button class="btn-cancel-product" id="cancelNewProductBtn">ביטול</button>
+      </div>
+    </div>
+
+    <div class="product-grid" id="productGrid">
+      <!-- product cards injected by JS -->
+    </div>
+  </div>
+
+  <aside class="order-summary" id="orderSummary">
+    <h2>סיכום הזמנה</h2>
+    <div class="summary-client" id="summaryClient"></div>
+    <div class="summary-items" id="summaryItems">
+      <p class="empty-msg">לא נבחרו מוצרים עדיין.</p>
+    </div>
+    <div class="summary-total" id="summaryTotal"></div>
+
+    <button class="btn-send" id="sendOrderBtn">אשר ושלח הזמנה</button>
+    <button class="btn-clear" id="clearOrderBtn">נקה הזמנה</button>
+  </aside>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
