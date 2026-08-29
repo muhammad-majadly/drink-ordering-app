@@ -573,11 +573,25 @@ function downloadOrderPdf(clientName, items, total, now) {
       2: { halign: "center", cellWidth: 18 },
       3: { halign: "right", cellWidth: productColWidth }
     },
+    // jsPDF's built-in font can't render Hebrew, so the product-name column (mostly
+    // Hebrew brand/flavor names) is blanked here and drawn as a rasterized image below instead.
+    didParseCell: data => {
+      if (data.section === "body" && data.column.index === 3) {
+        data.cell.text = [""];
+      }
+    },
     didDrawCell: data => {
-      if (data.section !== "head") return;
-      const centerX = data.cell.x + data.cell.width / 2;
-      const centerY = data.cell.y + data.cell.height / 2;
-      placeImageCentered(doc, textToImage(PDF_HEADER_LABELS[data.column.index], { fontPx: 28, color: "#ffffff" }), centerX, centerY, 3.6);
+      if (data.section === "head") {
+        const centerX = data.cell.x + data.cell.width / 2;
+        const centerY = data.cell.y + data.cell.height / 2;
+        placeImageCentered(doc, textToImage(PDF_HEADER_LABELS[data.column.index], { fontPx: 28, color: "#ffffff" }), centerX, centerY, 3.6);
+        return;
+      }
+      if (data.section === "body" && data.column.index === 3) {
+        const name = items[data.row.index].product.name;
+        const centerY = data.cell.y + data.cell.height / 2;
+        placeImageRight(doc, textToImage(name, { fontPx: 26, color: "#111111", fontWeight: "normal" }), data.cell.x + data.cell.width - 3, centerY, 3.6);
+      }
     }
   });
 
