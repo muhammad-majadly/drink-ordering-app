@@ -6,7 +6,7 @@ const COMPANY_EMAIL = "majadlydrinks@gmail.com";
 
 // Set to true to also email the order via EmailJS (in addition to the PDF download).
 // Turned off for now to avoid using up the EmailJS free-tier monthly email quota.
-const SEND_EMAIL = false;
+const SEND_EMAIL = true;
 
 const EMAILJS_SERVICE_ID = "service_k1x0q4g";
 const EMAILJS_TEMPLATE_ID = "template_nge4pdm";
