@@ -491,7 +491,7 @@ function textToImage(text, { fontPx = 40, fontWeight = "bold", color = "#000000"
   const ctx = canvas.getContext("2d");
   const scale = 3;
   const size = fontPx * scale;
-  const fontFamily = "Arial, Helvetica, sans-serif";
+  const fontFamily = "-apple-system, 'Segoe UI', Roboto, Arial, sans-serif";
   const isHebrew = HEBREW_RE.test(text);
 
   ctx.font = `${fontWeight} ${size}px ${fontFamily}`;
