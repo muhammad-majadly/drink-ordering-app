@@ -12,112 +12,116 @@ const EMAILJS_SERVICE_ID = "service_k1x0q4g";
 const EMAILJS_TEMPLATE_ID = "template_nge4pdm";
 const EMAILJS_PUBLIC_KEY = "qYu4fJoI8ADq-wjBN";
 
-// Predefined clients. Feel free to add/remove/edit freely.
+// Predefined cities and clients. Feel free to add/remove/edit freely.
+// Each client belongs to one city, used to filter the client dropdown below.
+const CITIES = ["נצרת", "עכו", "חיפה", "טבריה"];
+
 const CLIENTS = [
-  "Abu Ahmad Market",
-  "Al Salam Grocery",
-  "Green Valley Store",
-  "Sunrise Mini Market",
-  "City Center Kiosk"
+  { name: "Abu Ahmad Market", city: "נצרת" },
+  { name: "Al Salam Grocery", city: "עכו" },
+  { name: "Green Valley Store", city: "חיפה" },
+  { name: "Sunrise Mini Market", city: "טבריה" },
+  { name: "City Center Kiosk", city: "נצרת" }
 ];
 
 // Product list, from the real supplier catalog. Each product: id (unique),
-// name (kept as the real brand/flavor name, not translated), price (in local
-// currency, no symbol), category (must match one of CATEGORIES below),
-// image (optional path/URL, leave "" if none).
-// NOTE: prices are currently a flat 10 for every product (placeholder) — update per-product as real prices are set.
+// name (kept as the real brand/flavor name, not translated), size (package
+// size, researched/best-guess), unitType (one of UNIT_TYPES below — the fixed
+// wholesale unit this product is sold by), price (intentionally left "" —
+// the salesperson enters it per order on the product card), category (must
+// match one of CATEGORIES below), image (optional path/URL, leave "" if none).
 const PRODUCTS = [
   // ---- יפאורה תבורי ----
-  { id: "p1",  name: "תפוזינה תפוזים",              price: 10, category: "יפאורה תבורי", image: "images/p1.png" },
-  { id: "p2",  name: "תפוזינה אשכוליות",             price: 10, category: "יפאורה תבורי", image: "images/p2.png" },
-  { id: "p3",  name: "תפוזינה ענבים",                price: 10, category: "יפאורה תבורי", image: "images/p3.png" },
-  { id: "p4",  name: "תפוזינה מנגו",                 price: 10, category: "יפאורה תבורי", image: "images/p4.png" },
-  { id: "p5",  name: "תפוזינה דיאט / Zero",          price: 10, category: "יפאורה תבורי", image: "images/p5.png" },
-  { id: "p6",  name: "ספרינג תפוזים",                price: 10, category: "יפאורה תבורי", image: "images/p6.png" },
-  { id: "p7",  name: "ספרינג מנגו",                  price: 10, category: "יפאורה תבורי", image: "images/p7.png" },
-  { id: "p8",  name: "ספרינג אפרסק",                 price: 10, category: "יפאורה תבורי", image: "images/p8.png" },
-  { id: "p9",  name: "ספרינג תפוחים",                price: 10, category: "יפאורה תבורי", image: "images/p9.png" },
-  { id: "p10", name: "ספרינג ענבים",                 price: 10, category: "יפאורה תבורי", image: "images/p10.png" },
-  { id: "p11", name: "ספרינג אננס",                  price: 10, category: "יפאורה תבורי", image: "images/p11.png" },
-  { id: "p12", name: "ספרינג לימונדה",                price: 10, category: "יפאורה תבורי", image: "images/p12.png" },
-  { id: "p13", name: "ספרינג תה אפרסק",               price: 10, category: "יפאורה תבורי", image: "images/p13.png" },
-  { id: "p14", name: "ספרינג תה לימון",               price: 10, category: "יפאורה תבורי", image: "images/p14.png" },
-  { id: "p15", name: "שוופס סודה",                   price: 10, category: "יפאורה תבורי", image: "images/p15.jpg" },
-  { id: "p16", name: "שוופס טוניק",                   price: 10, category: "יפאורה תבורי", image: "images/p16.png" },
-  { id: "p17", name: "שוופס ביטר למון",               price: 10, category: "יפאורה תבורי", image: "images/p17.png" },
-  { id: "p18", name: "שוופס ג'ינג'ר אייל",            price: 10, category: "יפאורה תבורי", image: "images/p18.png" },
-  { id: "p19", name: "שוופס מוגז פירות",              price: 10, category: "יפאורה תבורי", image: "images/p19.jpg" },
-  { id: "p20", name: "שוופס מוחיטו",                  price: 10, category: "יפאורה תבורי", image: "images/p20.png" },
-  { id: "p21", name: "שוופס No Sugar",                price: 10, category: "יפאורה תבורי", image: "images/p21.jpg" },
-  { id: "p22", name: "שוופס מיקסרים",                 price: 10, category: "יפאורה תבורי", image: "images/p22.jpg" },
-  { id: "p23", name: "RC קולה",                       price: 10, category: "יפאורה תבורי", image: "images/p23.png" },
-  { id: "p24", name: "RC קולה ללא סוכר",               price: 10, category: "יפאורה תבורי", image: "images/p24.png" },
-  { id: "p25", name: "קריסטל",                       price: 10, category: "יפאורה תבורי", image: "images/p25.png" },
-  { id: "p26", name: "מיץ פז",                        price: 10, category: "יפאורה תבורי", image: "images/p26.png" },
-  { id: "p27", name: "Fruit Water",                   price: 10, category: "יפאורה תבורי", image: "images/p27.png" },
-  { id: "p28", name: "Fruit & Veg",                   price: 10, category: "יפאורה תבורי", image: "images/p28.png" },
-  { id: "p29", name: "עין גדי מים מינרליים",           price: 10, category: "יפאורה תבורי", image: "images/p29.png" },
+  { id: "p1",  name: "תפוזינה תפוזים",              size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p1.png" },
+  { id: "p2",  name: "תפוזינה אשכוליות",             size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p2.png" },
+  { id: "p3",  name: "תפוזינה ענבים",                size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p3.png" },
+  { id: "p4",  name: "תפוזינה מנגו",                 size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p4.png" },
+  { id: "p5",  name: "תפוזינה דיאט / Zero",          size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p5.png" },
+  { id: "p6",  name: "ספרינג תפוזים",                size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p6.png" },
+  { id: "p7",  name: "ספרינג מנגו",                  size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p7.png" },
+  { id: "p8",  name: "ספרינג אפרסק",                 size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p8.png" },
+  { id: "p9",  name: "ספרינג תפוחים",                size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p9.png" },
+  { id: "p10", name: "ספרינג ענבים",                 size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p10.png" },
+  { id: "p11", name: "ספרינג אננס",                  size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p11.png" },
+  { id: "p12", name: "ספרינג לימונדה",                size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p12.png" },
+  { id: "p13", name: "ספרינג תה אפרסק",               size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p13.png" },
+  { id: "p14", name: "ספרינג תה לימון",               size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p14.png" },
+  { id: "p15", name: "שוופס סודה",                   size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p15.jpg" },
+  { id: "p16", name: "שוופס טוניק",                   size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p16.png" },
+  { id: "p17", name: "שוופס ביטר למון",               size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p17.png" },
+  { id: "p18", name: "שוופס ג'ינג'ר אייל",            size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p18.png" },
+  { id: "p19", name: "שוופס מוגז פירות",              size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p19.jpg" },
+  { id: "p20", name: "שוופס מוחיטו",                  size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p20.png" },
+  { id: "p21", name: "שוופס No Sugar",                size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p21.jpg" },
+  { id: "p22", name: "שוופס מיקסרים",                 size: "מארז 6 יחידות 250 מ\"ל", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p22.jpg" },
+  { id: "p23", name: "RC קולה",                       size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p23.png" },
+  { id: "p24", name: "RC קולה ללא סוכר",               size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p24.png" },
+  { id: "p25", name: "קריסטל",                       size: "2 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p25.png" },
+  { id: "p26", name: "מיץ פז",                        size: "280 מ\"ל", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p26.png" },
+  { id: "p27", name: "Fruit Water",                   size: "1.5 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p27.png" },
+  { id: "p28", name: "Fruit & Veg",                   size: "1 ליטר", unitType: "ארגז", price: "", category: "יפאורה תבורי", image: "images/p28.png" },
+  { id: "p29", name: "עין גדי מים מינרליים",           size: "1.5 ליטר", unitType: "משטח", price: "", category: "יפאורה תבורי", image: "images/p29.png" },
 
   // ---- טמפו ----
-  { id: "p30", name: "פפסי",                          price: 10, category: "טמפו", image: "images/p30.png" },
-  { id: "p31", name: "פפסי מקס",                      price: 10, category: "טמפו", image: "images/p31.jpg" },
-  { id: "p32", name: "7UP",                           price: 10, category: "טמפו", image: "images/p32.png" },
-  { id: "p33", name: "7UP Free / Zero",               price: 10, category: "טמפו", image: "images/p33.png" },
-  { id: "p34", name: "מירינדה תפוז",                   price: 10, category: "טמפו", image: "images/p34.png" },
-  { id: "p35", name: "XL",                            price: 10, category: "טמפו", image: "images/p35.png" },
-  { id: "p36", name: "XL TEN",                        price: 10, category: "טמפו", image: "images/p36.jpg" },
-  { id: "p37", name: "טעמי XL שונים",                  price: 10, category: "טמפו", image: "images/p37.jpg" },
-  { id: "p38", name: "נסטי אפרסק",                     price: 10, category: "טמפו", image: "images/p38.png" },
-  { id: "p39", name: "נסטי לימון",                     price: 10, category: "טמפו", image: "" },
-  { id: "p40", name: "ג'אמפ תפוזים",                   price: 10, category: "טמפו", image: "images/p40.jpg" },
-  { id: "p41", name: "ג'אמפ מנגו",                     price: 10, category: "טמפו", image: "images/p41.jpg" },
-  { id: "p42", name: "ג'אמפ אשכוליות",                 price: 10, category: "טמפו", image: "images/p42.jpg" },
-  { id: "p43", name: "ג'אמפ תפוחים",                   price: 10, category: "טמפו", image: "" },
-  { id: "p44", name: "ג'אמפ ענבים",                    price: 10, category: "טמפו", image: "images/p44.png" },
-  { id: "p45", name: "ג'אמפ טעמים נוספים",              price: 10, category: "טמפו", image: "images/p45.jpg" },
-  { id: "p46", name: "סיידר הגליל",                    price: 10, category: "טמפו", image: "images/p46.jpg" },
-  { id: "p47", name: "נשר מאלט",                       price: 10, category: "טמפו", image: "images/p47.jpg" },
-  { id: "p48", name: "ד\"ר פפר",                       price: 10, category: "טמפו", image: "images/p48.png" },
-  { id: "p49", name: "Gatorade",                      price: 10, category: "טמפו", image: "images/p49.jpg" },
-  { id: "p50", name: "Arizona",                       price: 10, category: "טמפו", image: "images/p50.png" },
-  { id: "p51", name: "V8",                            price: 10, category: "טמפו", image: "images/p51.jpg" },
-  { id: "p52", name: "Vita Coco",                     price: 10, category: "טמפו", image: "images/p52.jpg" },
-  { id: "p53", name: "Jumex",                         price: 10, category: "טמפו", image: "images/p53.jpg" },
-  { id: "p54", name: "Jumex Unicofresco",             price: 10, category: "טמפו", image: "images/p54.jpg" },
-  { id: "p55", name: "Guarana",                       price: 10, category: "טמפו", image: "images/p55.jpg" },
-  { id: "p56", name: "Perrier",                       price: 10, category: "טמפו", image: "images/p56.jpg" },
-  { id: "p57", name: "Perrier Juice",                 price: 10, category: "טמפו", image: "images/p57.jpg" },
-  { id: "p58", name: "סאפה",                          price: 10, category: "טמפו", image: "images/p58.jpg" },
-  { id: "p59", name: "איילנד",                        price: 10, category: "טמפו", image: "images/p59.png" },
-  { id: "p60", name: "מאסטר קפה",                      price: 10, category: "טמפו", image: "images/p60.jpg" },
+  { id: "p30", name: "פפסי",                          size: "1.5 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "images/p30.png" },
+  { id: "p31", name: "פפסי מקס",                      size: "1.5 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "images/p31.jpg" },
+  { id: "p32", name: "7UP",                           size: "1.5 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "images/p32.png" },
+  { id: "p33", name: "7UP Free / Zero",               size: "1.5 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "images/p33.png" },
+  { id: "p34", name: "מירינדה תפוז",                   size: "1.5 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "images/p34.png" },
+  { id: "p35", name: "XL",                            size: "250 מ\"ל פחית", unitType: "ארגז", price: "", category: "טמפו", image: "images/p35.png" },
+  { id: "p36", name: "XL TEN",                        size: "250 מ\"ל פחית", unitType: "ארגז", price: "", category: "טמפו", image: "images/p36.jpg" },
+  { id: "p37", name: "טעמי XL שונים",                  size: "250 מ\"ל פחית", unitType: "ארגז", price: "", category: "טמפו", image: "images/p37.jpg" },
+  { id: "p38", name: "נסטי אפרסק",                     size: "1.5 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "images/p38.png" },
+  { id: "p39", name: "נסטי לימון",                     size: "1.5 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "" },
+  { id: "p40", name: "ג'אמפ תפוזים",                   size: "1.5 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "images/p40.jpg" },
+  { id: "p41", name: "ג'אמפ מנגו",                     size: "1.5 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "images/p41.jpg" },
+  { id: "p42", name: "ג'אמפ אשכוליות",                 size: "1.5 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "images/p42.jpg" },
+  { id: "p43", name: "ג'אמפ תפוחים",                   size: "1.5 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "" },
+  { id: "p44", name: "ג'אמפ ענבים",                    size: "1.5 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "images/p44.png" },
+  { id: "p45", name: "ג'אמפ טעמים נוספים",              size: "1.5 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "images/p45.jpg" },
+  { id: "p46", name: "סיידר הגליל",                    size: "1 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "images/p46.jpg" },
+  { id: "p47", name: "נשר מאלט",                       size: "500 מ\"ל", unitType: "ארגז", price: "", category: "טמפו", image: "images/p47.jpg" },
+  { id: "p48", name: "ד\"ר פפר",                       size: "330 מ\"ל", unitType: "ארגז", price: "", category: "טמפו", image: "images/p48.png" },
+  { id: "p49", name: "Gatorade",                      size: "500 מ\"ל", unitType: "ארגז", price: "", category: "טמפו", image: "images/p49.jpg" },
+  { id: "p50", name: "Arizona",                       size: "680 מ\"ל", unitType: "ארגז", price: "", category: "טמפו", image: "images/p50.png" },
+  { id: "p51", name: "V8",                            size: "1 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "images/p51.jpg" },
+  { id: "p52", name: "Vita Coco",                     size: "330 מ\"ל", unitType: "ארגז", price: "", category: "טמפו", image: "images/p52.jpg" },
+  { id: "p53", name: "Jumex",                         size: "335 מ\"ל", unitType: "ארגז", price: "", category: "טמפו", image: "images/p53.jpg" },
+  { id: "p54", name: "Jumex Unicofresco",             size: "1 ליטר", unitType: "ארגז", price: "", category: "טמפו", image: "images/p54.jpg" },
+  { id: "p55", name: "Guarana",                       size: "350 מ\"ל", unitType: "ארגז", price: "", category: "טמפו", image: "images/p55.jpg" },
+  { id: "p56", name: "Perrier",                       size: "330 מ\"ל", unitType: "ארגז", price: "", category: "טמפו", image: "images/p56.jpg" },
+  { id: "p57", name: "Perrier Juice",                 size: "330 מ\"ל", unitType: "ארגז", price: "", category: "טמפו", image: "images/p57.jpg" },
+  { id: "p58", name: "סאפה",                          size: "220 מ\"ל", unitType: "ארגז", price: "", category: "טמפו", image: "images/p58.jpg" },
+  { id: "p59", name: "איילנד",                        size: "330 מ\"ל", unitType: "ארגז", price: "", category: "טמפו", image: "images/p59.png" },
+  { id: "p60", name: "מאסטר קפה",                      size: "250 מ\"ל", unitType: "ארגז", price: "", category: "טמפו", image: "images/p60.jpg" },
 
   // ---- קוקה-קולה / CBC ----
-  { id: "p61", name: "קוקה־קולה",                     price: 10, category: "קוקה-קולה / CBC", image: "images/p61.jpg" },
-  { id: "p62", name: "קוקה־קולה Zero",                price: 10, category: "קוקה-קולה / CBC", image: "images/p62.jpg" },
-  { id: "p63", name: "דיאט קוקה־קולה",                 price: 10, category: "קוקה-קולה / CBC", image: "images/p63.jpg" },
-  { id: "p64", name: "ספרייט",                        price: 10, category: "קוקה-קולה / CBC", image: "images/p64.jpg" },
-  { id: "p65", name: "ספרייט Zero",                   price: 10, category: "קוקה-קולה / CBC", image: "images/p65.jpg" },
-  { id: "p66", name: "פאנטה תפוז",                     price: 10, category: "קוקה-קולה / CBC", image: "images/p66.jpg" },
-  { id: "p67", name: "פאנטה בטעמים נוספים",             price: 10, category: "קוקה-קולה / CBC", image: "images/p67.jpg" },
-  { id: "p68", name: "Fuze Tea אפרסק",                price: 10, category: "קוקה-קולה / CBC", image: "images/p68.png" },
-  { id: "p69", name: "Fuze Tea מנגו אננס",            price: 10, category: "קוקה-קולה / CBC", image: "images/p69.jpg" },
-  { id: "p70", name: "Fuze Tea אבטיח",                price: 10, category: "קוקה-קולה / CBC", image: "images/p70.png" },
-  { id: "p71", name: "Fuze Tea ענבים",                price: 10, category: "קוקה-קולה / CBC", image: "images/p71.jpg" },
-  { id: "p72", name: "Fuze Tea לימון נענע",           price: 10, category: "קוקה-קולה / CBC", image: "images/p72.jpg" },
-  { id: "p73", name: "Fuze Tea Zero אפרסק",           price: 10, category: "קוקה-קולה / CBC", image: "images/p73.jpg" },
-  { id: "p74", name: "Fuze Tea Zero פירות יער נענע",  price: 10, category: "קוקה-קולה / CBC", image: "images/p74.jpg" },
-  { id: "p75", name: "Fuze Tea Zero Green ליצ'י פסיפלורה", price: 10, category: "קוקה-קולה / CBC", image: "images/p75.png" },
-  { id: "p76", name: "קינלי סודה",                     price: 10, category: "קוקה-קולה / CBC", image: "images/p76.png" },
-  { id: "p77", name: "Powerade / טעמים שונים",        price: 10, category: "קוקה-קולה / CBC", image: "images/p77.jpg" },
-  { id: "p78", name: "פריגת תפוזים",                   price: 10, category: "קוקה-קולה / CBC", image: "images/p78.jpg" },
-  { id: "p79", name: "פריגת אשכוליות",                 price: 10, category: "קוקה-קולה / CBC", image: "images/p79.jpg" },
-  { id: "p80", name: "פריגת לימונדה",                  price: 10, category: "קוקה-קולה / CBC", image: "images/p80.jpg" },
-  { id: "p81", name: "פריגת מנגו",                     price: 10, category: "קוקה-קולה / CBC", image: "images/p81.jpg" },
-  { id: "p82", name: "פריגת תפוחים",                   price: 10, category: "קוקה-קולה / CBC", image: "images/p82.jpg" },
-  { id: "p83", name: "פריגת ענבים",                    price: 10, category: "קוקה-קולה / CBC", image: "images/p83.png" },
-  { id: "p84", name: "פריגת נקטרים/מיצים בטעמים נוספים", price: 10, category: "קוקה-קולה / CBC", image: "images/p84.webp" },
-  { id: "p85", name: "נביעות מים מינרליים",             price: 10, category: "קוקה-קולה / CBC", image: "images/p85.png" },
-  { id: "p86", name: "נביעות בטעמים",                   price: 10, category: "קוקה-קולה / CBC", image: "images/p86.jpg" }
+  { id: "p61", name: "קוקה־קולה",                     size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p61.jpg" },
+  { id: "p62", name: "קוקה־קולה Zero",                size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p62.jpg" },
+  { id: "p63", name: "דיאט קוקה־קולה",                 size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p63.jpg" },
+  { id: "p64", name: "ספרייט",                        size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p64.jpg" },
+  { id: "p65", name: "ספרייט Zero",                   size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p65.jpg" },
+  { id: "p66", name: "פאנטה תפוז",                     size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p66.jpg" },
+  { id: "p67", name: "פאנטה בטעמים נוספים",             size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p67.jpg" },
+  { id: "p68", name: "Fuze Tea אפרסק",                size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p68.png" },
+  { id: "p69", name: "Fuze Tea מנגו אננס",            size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p69.jpg" },
+  { id: "p70", name: "Fuze Tea אבטיח",                size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p70.png" },
+  { id: "p71", name: "Fuze Tea ענבים",                size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p71.jpg" },
+  { id: "p72", name: "Fuze Tea לימון נענע",           size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p72.jpg" },
+  { id: "p73", name: "Fuze Tea Zero אפרסק",           size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p73.jpg" },
+  { id: "p74", name: "Fuze Tea Zero פירות יער נענע",  size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p74.jpg" },
+  { id: "p75", name: "Fuze Tea Zero Green ליצ'י פסיפלורה", size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p75.png" },
+  { id: "p76", name: "קינלי סודה",                     size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p76.png" },
+  { id: "p77", name: "Powerade / טעמים שונים",        size: "500 מ\"ל", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p77.jpg" },
+  { id: "p78", name: "פריגת תפוזים",                   size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p78.jpg" },
+  { id: "p79", name: "פריגת אשכוליות",                 size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p79.jpg" },
+  { id: "p80", name: "פריגת לימונדה",                  size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p80.jpg" },
+  { id: "p81", name: "פריגת מנגו",                     size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p81.jpg" },
+  { id: "p82", name: "פריגת תפוחים",                   size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p82.jpg" },
+  { id: "p83", name: "פריגת ענבים",                    size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p83.png" },
+  { id: "p84", name: "פריגת נקטרים/מיצים בטעמים נוספים", size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p84.webp" },
+  { id: "p85", name: "נביעות מים מינרליים",             size: "1.5 ליטר", unitType: "משטח", price: "", category: "קוקה-קולה / CBC", image: "images/p85.png" },
+  { id: "p86", name: "נביעות בטעמים",                   size: "1.5 ליטר", unitType: "ארגז", price: "", category: "קוקה-קולה / CBC", image: "images/p86.jpg" }
 ];
 
 const ALL_CATEGORY = "הכל";
@@ -131,14 +135,24 @@ const CUSTOM_PRODUCTS_KEY = "drinkOrderApp_customProducts";
 // ============================================================
 
 const quantities = {}; // productId -> qty
+const prices = {}; // productId -> price entered by the salesperson
 let activeCategory = ALL_CATEGORY;
 let searchTerm = "";
 let customProducts = []; // products added on the fly by the salesperson
+
+const UNIT_TYPES = ["יחידה", "ארגז", "משטח"];
+const UNIT_TYPE_PLURALS = { "יחידה": "יחידות", "ארגז": "ארגזים", "משטח": "משטחים" };
+
+function unitLabel(unitType, qty) {
+  if (qty === 1) return unitType;
+  return UNIT_TYPE_PLURALS[unitType] || unitType;
+}
 
 // ============================================================
 // DOM REFS
 // ============================================================
 
+const citySelect = document.getElementById("citySelect");
 const clientSelect = document.getElementById("clientSelect");
 const clientInput = document.getElementById("clientInput");
 const searchBox = document.getElementById("searchBox");
@@ -152,8 +166,10 @@ const clearOrderBtn = document.getElementById("clearOrderBtn");
 const addProductToggleBtn = document.getElementById("addProductToggleBtn");
 const addProductForm = document.getElementById("addProductForm");
 const newProductName = document.getElementById("newProductName");
+const newProductSize = document.getElementById("newProductSize");
 const newProductPrice = document.getElementById("newProductPrice");
 const newProductCategory = document.getElementById("newProductCategory");
+const newProductUnitType = document.getElementById("newProductUnitType");
 const saveNewProductBtn = document.getElementById("saveNewProductBtn");
 const cancelNewProductBtn = document.getElementById("cancelNewProductBtn");
 
@@ -166,8 +182,14 @@ function init() {
 
   if (SEND_EMAIL) emailjs.init(EMAILJS_PUBLIC_KEY);
 
-  CLIENTS.forEach(addClientOption);
-  loadCustomClients().forEach(addClientOption);
+  CITIES.forEach(city => {
+    const opt = document.createElement("option");
+    opt.value = city;
+    opt.textContent = city;
+    citySelect.appendChild(opt);
+  });
+  citySelect.addEventListener("change", populateClientOptions);
+  populateClientOptions();
 
   customProducts = loadCustomProducts();
 
@@ -176,6 +198,13 @@ function init() {
     opt.value = cat;
     opt.textContent = cat;
     newProductCategory.appendChild(opt);
+  });
+
+  UNIT_TYPES.forEach(unitType => {
+    const opt = document.createElement("option");
+    opt.value = unitType;
+    opt.textContent = unitType;
+    newProductUnitType.appendChild(opt);
   });
 
   CATEGORIES.forEach(cat => {
@@ -230,25 +259,34 @@ function loadCustomClients() {
   }
 }
 
-function addClientOption(name) {
-  const opt = document.createElement("option");
-  opt.value = name;
-  opt.textContent = name;
-  clientSelect.appendChild(opt);
+function getAllClients() {
+  return CLIENTS.concat(loadCustomClients());
+}
+
+function populateClientOptions() {
+  const selectedCity = citySelect.value;
+  clientSelect.innerHTML = '<option value="">-- בחר לקוח --</option>';
+  getAllClients()
+    .filter(c => !selectedCity || c.city === selectedCity)
+    .forEach(c => {
+      const opt = document.createElement("option");
+      opt.value = c.name;
+      opt.textContent = c.name;
+      clientSelect.appendChild(opt);
+    });
 }
 
 function isKnownClient(name) {
   const lower = name.toLowerCase();
-  return CLIENTS.some(c => c.toLowerCase() === lower) ||
-    loadCustomClients().some(c => c.toLowerCase() === lower);
+  return getAllClients().some(c => c.name.toLowerCase() === lower);
 }
 
 function rememberNewClient(name) {
   if (!name || isKnownClient(name)) return;
   const custom = loadCustomClients();
-  custom.push(name);
+  custom.push({ name, city: citySelect.value || "" });
   localStorage.setItem(CUSTOM_CLIENTS_KEY, JSON.stringify(custom));
-  addClientOption(name);
+  populateClientOptions();
 }
 
 // ============================================================
@@ -278,21 +316,25 @@ function slugify(name) {
 function closeAddProductForm() {
   addProductForm.hidden = true;
   newProductName.value = "";
+  newProductSize.value = "";
   newProductPrice.value = "";
   newProductCategory.value = CATEGORIES[1];
+  newProductUnitType.value = "ארגז";
 }
 
 function saveNewProduct() {
   const name = newProductName.value.trim();
-  const price = parseFloat(newProductPrice.value);
+  const size = newProductSize.value.trim();
+  const priceInput = newProductPrice.value.trim();
   const category = newProductCategory.value;
+  const unitType = newProductUnitType.value;
 
   if (!name) {
     alert("אנא הזן שם מוצר.");
     return;
   }
-  if (isNaN(price) || price < 0) {
-    alert("אנא הזן מחיר תקין.");
+  if (priceInput !== "" && (isNaN(parseFloat(priceInput)) || parseFloat(priceInput) < 0)) {
+    alert("אנא הזן מחיר תקין, או השאר ריק כדי להזין אותו מאוחר יותר.");
     return;
   }
 
@@ -304,7 +346,7 @@ function saveNewProduct() {
     suffix++;
   }
 
-  const product = { id, name, price, category, image: "" };
+  const product = { id, name, size, price: priceInput === "" ? "" : parseFloat(priceInput), category, unitType, image: "" };
   customProducts.push(product);
   saveCustomProducts();
 
@@ -357,9 +399,23 @@ function buildProductCard(product) {
   name.className = "product-name";
   name.textContent = product.name;
 
-  const price = document.createElement("div");
-  price.className = "product-price";
-  price.textContent = "₪" + product.price;
+  const size = document.createElement("div");
+  size.className = "product-size";
+  size.textContent = product.size || "";
+
+  const priceInput = document.createElement("input");
+  priceInput.type = "number";
+  priceInput.className = "product-price-input";
+  priceInput.min = "0";
+  priceInput.step = "0.5";
+  priceInput.placeholder = "מחיר (₪)";
+  const currentPrice = prices[product.id] !== undefined ? prices[product.id] : product.price;
+  priceInput.value = currentPrice === "" || currentPrice === undefined ? "" : currentPrice;
+  priceInput.addEventListener("input", () => {
+    const val = priceInput.value;
+    prices[product.id] = val === "" ? "" : parseFloat(val);
+    renderSummary();
+  });
 
   const qtyRow = document.createElement("div");
   qtyRow.className = "qty-row";
@@ -369,9 +425,21 @@ function buildProductCard(product) {
   minusBtn.textContent = "−";
   minusBtn.addEventListener("click", () => changeQty(product.id, -1));
 
-  const qtyValue = document.createElement("div");
-  qtyValue.className = "qty-value";
-  qtyValue.textContent = qty;
+  const qtyInput = document.createElement("input");
+  qtyInput.type = "number";
+  qtyInput.className = "qty-input";
+  qtyInput.min = "0";
+  qtyInput.value = qty || "";
+  qtyInput.addEventListener("input", () => {
+    const val = parseInt(qtyInput.value, 10);
+    if (!val || val <= 0) {
+      delete quantities[product.id];
+    } else {
+      quantities[product.id] = val;
+    }
+    card.classList.toggle("has-qty", !!quantities[product.id]);
+    renderSummary();
+  });
 
   const plusBtn = document.createElement("button");
   plusBtn.className = "qty-btn";
@@ -379,13 +447,19 @@ function buildProductCard(product) {
   plusBtn.addEventListener("click", () => changeQty(product.id, 1));
 
   qtyRow.appendChild(minusBtn);
-  qtyRow.appendChild(qtyValue);
+  qtyRow.appendChild(qtyInput);
   qtyRow.appendChild(plusBtn);
+
+  const unitTypeLabel = document.createElement("div");
+  unitTypeLabel.className = "product-unit-type";
+  unitTypeLabel.textContent = product.unitType || "";
 
   card.appendChild(img);
   card.appendChild(name);
-  card.appendChild(price);
+  if (product.size) card.appendChild(size);
+  card.appendChild(priceInput);
   card.appendChild(qtyRow);
+  if (product.unitType) card.appendChild(unitTypeLabel);
 
   return card;
 }
@@ -410,11 +484,20 @@ function getClientName() {
   return clientInput.value.trim();
 }
 
+function getResolvedPrice(product) {
+  const entered = prices[product.id];
+  if (entered !== undefined && entered !== "") return Number(entered);
+  return typeof product.price === "number" ? product.price : 0;
+}
+
 function getOrderedProducts() {
   const allProducts = getAllProducts();
   return Object.keys(quantities)
-    .map(id => ({ product: allProducts.find(p => p.id === id), qty: quantities[id] }))
-    .filter(item => item.product && item.qty > 0);
+    .map(id => {
+      const product = allProducts.find(p => p.id === id);
+      return product ? { product, qty: quantities[id], price: getResolvedPrice(product) } : null;
+    })
+    .filter(item => item && item.qty > 0);
 }
 
 function renderSummary() {
@@ -432,8 +515,8 @@ function renderSummary() {
 
   let total = 0;
 
-  items.forEach(({ product, qty }) => {
-    const lineTotal = product.price * qty;
+  items.forEach(({ product, qty, price }) => {
+    const lineTotal = price * qty;
     total += lineTotal;
 
     const row = document.createElement("div");
@@ -445,7 +528,7 @@ function renderSummary() {
     nameEl.textContent = product.name;
     const detailEl = document.createElement("div");
     detailEl.className = "summary-item-detail";
-    detailEl.textContent = `${qty} × ₪${product.price} = ₪${lineTotal}`;
+    detailEl.textContent = `${qty} ${unitLabel(product.unitType, qty)} × ₪${price} = ₪${lineTotal}`;
     info.appendChild(nameEl);
     info.appendChild(detailEl);
 
@@ -564,7 +647,7 @@ function downloadOrderPdf(clientName, items, total, now) {
     startY: y,
     margin: { left: margin, right: margin },
     head: [["", "", "", ""]],
-    body: items.map(({ product, qty }) => [String(product.price * qty), String(product.price), String(qty), product.name]),
+    body: items.map(({ product, qty, price }) => [String(price * qty), String(price), String(qty), product.name]),
     theme: "grid",
     styles: { fontSize: 11, cellPadding: 3 },
     headStyles: { fillColor: BRAND_COLOR, textColor: 255, fontStyle: "bold" },
@@ -590,9 +673,10 @@ function downloadOrderPdf(clientName, items, total, now) {
         return;
       }
       if (data.section === "body" && data.column.index === 3) {
-        const name = items[data.row.index].product.name;
+        const { product, qty } = items[data.row.index];
+        const label = product.name + (product.unitType ? ` (${unitLabel(product.unitType, qty)})` : "");
         const centerY = data.cell.y + data.cell.height / 2;
-        placeImageRight(doc, textToImage(name, { fontPx: 26, color: "#111111", fontWeight: "normal" }), data.cell.x + data.cell.width - 3, centerY, 3.6);
+        placeImageRight(doc, textToImage(label, { fontPx: 26, color: "#111111", fontWeight: "normal" }), data.cell.x + data.cell.width - 3, centerY, 3.6);
       }
     }
   });
@@ -614,7 +698,7 @@ function saveOrderToDatabase(clientName, items, total, now) {
     client: clientName,
     dateStr: formatDate(now),
     timeStr: formatTime(now),
-    items: items.map(({ product, qty }) => ({ id: product.id, name: product.name, qty, price: product.price })),
+    items: items.map(({ product, qty, price }) => ({ id: product.id, name: product.name, size: product.size || "", unitType: product.unitType || "", qty, price })),
     total: total,
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     salesPin: SALES_PIN,
@@ -653,12 +737,12 @@ function sendOrder() {
   lines.push("פריטים:");
   lines.push("");
 
-  items.forEach(({ product, qty }) => {
-    const lineTotal = product.price * qty;
+  items.forEach(({ product, qty, price }) => {
+    const lineTotal = price * qty;
     total += lineTotal;
-    lines.push(product.name);
-    lines.push("כמות: " + qty);
-    lines.push("מחיר: ₪" + product.price);
+    lines.push(product.name + (product.size ? " - " + product.size : ""));
+    lines.push("כמות: " + qty + " " + unitLabel(product.unitType, qty));
+    lines.push("מחיר: ₪" + price);
     lines.push("סה\"כ: ₪" + lineTotal);
     lines.push("");
   });
@@ -703,6 +787,9 @@ function sendOrder() {
 
 function clearOrder() {
   Object.keys(quantities).forEach(id => delete quantities[id]);
+  Object.keys(prices).forEach(id => delete prices[id]);
+  citySelect.value = "";
+  populateClientOptions();
   clientSelect.value = "";
   clientInput.value = "";
   searchBox.value = "";

@@ -13,6 +13,11 @@
   <h1>הזמנה חדשה</h1>
 
   <div class="client-section">
+    <label for="citySelect">עיר</label>
+    <select id="citySelect">
+      <option value="">-- כל הערים --</option>
+    </select>
+
     <label for="clientSelect">לקוח / חנות</label>
     <div class="client-row">
       <select id="clientSelect">
@@ -40,8 +45,10 @@
 
     <div class="add-product-form" id="addProductForm" hidden>
       <input type="text" id="newProductName" placeholder="שם המוצר">
-      <input type="number" id="newProductPrice" placeholder="מחיר (₪)" min="0" step="0.5">
+      <input type="text" id="newProductSize" placeholder="גודל (למשל: 1.5 ליטר)">
+      <input type="number" id="newProductPrice" placeholder="מחיר (₪) - אופציונלי" min="0" step="0.5">
       <select id="newProductCategory"></select>
+      <select id="newProductUnitType"></select>
       <div class="add-product-actions">
         <button class="btn-save-product" id="saveNewProductBtn">הוסף מוצר</button>
         <button class="btn-cancel-product" id="cancelNewProductBtn">ביטול</button>

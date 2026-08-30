@@ -4,6 +4,20 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+const UNIT_TYPE_PLURALS = { "יחידה": "יחידות", "ארגז": "ארגזים", "משטח": "משטחים" };
+
+function unitLabel(unitType, qty) {
+  if (!unitType) return "";
+  if (qty === 1) return unitType;
+  return UNIT_TYPE_PLURALS[unitType] || unitType;
+}
+
+function itemDisplayName(item) {
+  let label = item.name;
+  if (item.size) label += " - " + item.size;
+  return label;
+}
+
 function loadOrders() {
   const listEl = document.getElementById("ordersList");
   listEl.innerHTML = '<p class="empty-msg">טוען הזמנות...</p>';
@@ -43,7 +57,7 @@ function buildOrderCard(order) {
   table.className = "order-card-table";
   const rows = (order.items || []).map(item => {
     const lineTotal = item.price * item.qty;
-    return `<tr><td>${escapeHtml(item.name)}</td><td>${item.qty}</td><td>₪${item.price}</td><td>₪${lineTotal}</td></tr>`;
+    return `<tr><td>${escapeHtml(itemDisplayName(item))}</td><td>${item.qty} ${escapeHtml(unitLabel(item.unitType, item.qty))}</td><td>₪${item.price}</td><td>₪${lineTotal}</td></tr>`;
   }).join("");
   table.innerHTML = `
     <thead><tr><th>מוצר</th><th>כמות</th><th>מחיר</th><th>סה"כ</th></tr></thead>
@@ -70,7 +84,7 @@ function buildOrderCard(order) {
 function printOrder(order) {
   const rows = (order.items || []).map(item => {
     const lineTotal = item.price * item.qty;
-    return `<tr><td>${escapeHtml(item.name)}</td><td>${item.qty}</td><td>₪${item.price}</td><td>₪${lineTotal}</td></tr>`;
+    return `<tr><td>${escapeHtml(itemDisplayName(item))}</td><td>${item.qty} ${escapeHtml(unitLabel(item.unitType, item.qty))}</td><td>₪${item.price}</td><td>₪${lineTotal}</td></tr>`;
   }).join("");
 
   const html = `<!DOCTYPE html>
