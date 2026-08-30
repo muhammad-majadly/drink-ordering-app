@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>משקאות מגאדלי - הזמנות</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="company-name">משקאות מגאדלי</div>
+  <h1>הזמנות</h1>
+  <button class="btn-refresh-orders" id="refreshBtn">רענן</button>
+</header>
+
+<main class="office-main">
+  <div id="ordersList">
+    <p class="empty-msg">טוען הזמנות...</p>
+  </div>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="pin-gate.js"></script>
+<script src="office.js"></script>
+</body>
+</html>

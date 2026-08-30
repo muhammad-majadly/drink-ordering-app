@@ -162,6 +162,8 @@ const cancelNewProductBtn = document.getElementById("cancelNewProductBtn");
 // ============================================================
 
 function init() {
+  if (!requirePin(SALES_PIN, "drinkOrderApp_salesPinOk")) return;
+
   if (SEND_EMAIL) emailjs.init(EMAILJS_PUBLIC_KEY);
 
   CLIENTS.forEach(addClientOption);
@@ -607,6 +609,22 @@ function downloadOrderPdf(clientName, items, total, now) {
   doc.save(`הזמנה_${safeClientName}_${fileDate}.pdf`);
 }
 
+function saveOrderToDatabase(clientName, items, total, now) {
+  db.collection("orders").add({
+    client: clientName,
+    dateStr: formatDate(now),
+    timeStr: formatTime(now),
+    items: items.map(({ product, qty }) => ({ id: product.id, name: product.name, qty, price: product.price })),
+    total: total,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    salesPin: SALES_PIN,
+    officePin: OFFICE_PIN
+  }).catch(err => {
+    console.error("Failed to save order to database:", err);
+    alert("שים לב: ההזמנה נשמרה כ-PDF, אך לא הצלחנו לשמור אותה במסד הנתונים למשרד.");
+  });
+}
+
 function sendOrder() {
   const clientName = getClientName();
   const items = getOrderedProducts();
@@ -653,6 +671,7 @@ function sendOrder() {
   const subject = "הזמנה חדשה - " + clientName + " - " + formatDate(now);
 
   downloadOrderPdf(clientName, items, total, now);
+  saveOrderToDatabase(clientName, items, total, now);
 
   if (!SEND_EMAIL) {
     alert("ההזמנה נשמרה כ-PDF!");
