@@ -265,12 +265,16 @@ body {
   padding: 6px 4px;
 }
 
-.product-unit-type {
-  font-size: 14px;
+.product-unit-type-select {
+  font-size: 15px;
   color: #1f6f43;
   font-weight: 600;
   text-align: center;
-  margin-top: 2px;
+  margin-top: 4px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 2px solid #dde5e0;
+  width: 100%;
 }
 
 .order-summary {

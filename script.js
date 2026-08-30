@@ -136,6 +136,7 @@ const CUSTOM_PRODUCTS_KEY = "drinkOrderApp_customProducts";
 
 const quantities = {}; // productId -> qty
 const prices = {}; // productId -> price entered by the salesperson
+const unitTypeOverrides = {}; // productId -> unit type chosen for this order (overrides the product's default)
 let activeCategory = ALL_CATEGORY;
 let searchTerm = "";
 let customProducts = []; // products added on the fly by the salesperson
@@ -450,16 +451,26 @@ function buildProductCard(product) {
   qtyRow.appendChild(qtyInput);
   qtyRow.appendChild(plusBtn);
 
-  const unitTypeLabel = document.createElement("div");
-  unitTypeLabel.className = "product-unit-type";
-  unitTypeLabel.textContent = product.unitType || "";
+  const unitTypeSelect = document.createElement("select");
+  unitTypeSelect.className = "product-unit-type-select";
+  UNIT_TYPES.forEach(unitType => {
+    const opt = document.createElement("option");
+    opt.value = unitType;
+    opt.textContent = unitType;
+    unitTypeSelect.appendChild(opt);
+  });
+  unitTypeSelect.value = unitTypeOverrides[product.id] !== undefined ? unitTypeOverrides[product.id] : product.unitType;
+  unitTypeSelect.addEventListener("change", () => {
+    unitTypeOverrides[product.id] = unitTypeSelect.value;
+    renderSummary();
+  });
 
   card.appendChild(img);
   card.appendChild(name);
   if (product.size) card.appendChild(size);
   card.appendChild(priceInput);
   card.appendChild(qtyRow);
-  if (product.unitType) card.appendChild(unitTypeLabel);
+  if (product.unitType) card.appendChild(unitTypeSelect);
 
   return card;
 }
@@ -490,12 +501,17 @@ function getResolvedPrice(product) {
   return typeof product.price === "number" ? product.price : 0;
 }
 
+function getResolvedUnitType(product) {
+  const override = unitTypeOverrides[product.id];
+  return override !== undefined ? override : product.unitType;
+}
+
 function getOrderedProducts() {
   const allProducts = getAllProducts();
   return Object.keys(quantities)
     .map(id => {
       const product = allProducts.find(p => p.id === id);
-      return product ? { product, qty: quantities[id], price: getResolvedPrice(product) } : null;
+      return product ? { product, qty: quantities[id], price: getResolvedPrice(product), unitType: getResolvedUnitType(product) } : null;
     })
     .filter(item => item && item.qty > 0);
 }
@@ -515,7 +531,7 @@ function renderSummary() {
 
   let total = 0;
 
-  items.forEach(({ product, qty, price }) => {
+  items.forEach(({ product, qty, price, unitType }) => {
     const lineTotal = price * qty;
     total += lineTotal;
 
@@ -528,7 +544,7 @@ function renderSummary() {
     nameEl.textContent = product.name;
     const detailEl = document.createElement("div");
     detailEl.className = "summary-item-detail";
-    detailEl.textContent = `${qty} ${unitLabel(product.unitType, qty)} × ₪${price} = ₪${lineTotal}`;
+    detailEl.textContent = `${qty} ${unitLabel(unitType, qty)} × ₪${price} = ₪${lineTotal}`;
     info.appendChild(nameEl);
     info.appendChild(detailEl);
 
@@ -673,8 +689,8 @@ function downloadOrderPdf(clientName, items, total, now) {
         return;
       }
       if (data.section === "body" && data.column.index === 3) {
-        const { product, qty } = items[data.row.index];
-        const label = product.name + (product.unitType ? ` (${unitLabel(product.unitType, qty)})` : "");
+        const { product, qty, unitType } = items[data.row.index];
+        const label = product.name + (unitType ? ` (${unitLabel(unitType, qty)})` : "");
         const centerY = data.cell.y + data.cell.height / 2;
         placeImageRight(doc, textToImage(label, { fontPx: 26, color: "#111111", fontWeight: "normal" }), data.cell.x + data.cell.width - 3, centerY, 3.6);
       }
@@ -698,7 +714,7 @@ function saveOrderToDatabase(clientName, items, total, now) {
     client: clientName,
     dateStr: formatDate(now),
     timeStr: formatTime(now),
-    items: items.map(({ product, qty, price }) => ({ id: product.id, name: product.name, size: product.size || "", unitType: product.unitType || "", qty, price })),
+    items: items.map(({ product, qty, price, unitType }) => ({ id: product.id, name: product.name, size: product.size || "", unitType: unitType || "", qty, price })),
     total: total,
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     salesPin: SALES_PIN,
@@ -737,11 +753,11 @@ function sendOrder() {
   lines.push("פריטים:");
   lines.push("");
 
-  items.forEach(({ product, qty, price }) => {
+  items.forEach(({ product, qty, price, unitType }) => {
     const lineTotal = price * qty;
     total += lineTotal;
     lines.push(product.name + (product.size ? " - " + product.size : ""));
-    lines.push("כמות: " + qty + " " + unitLabel(product.unitType, qty));
+    lines.push("כמות: " + qty + " " + unitLabel(unitType, qty));
     lines.push("מחיר: ₪" + price);
     lines.push("סה\"כ: ₪" + lineTotal);
     lines.push("");
@@ -788,6 +804,7 @@ function sendOrder() {
 function clearOrder() {
   Object.keys(quantities).forEach(id => delete quantities[id]);
   Object.keys(prices).forEach(id => delete prices[id]);
+  Object.keys(unitTypeOverrides).forEach(id => delete unitTypeOverrides[id]);
   citySelect.value = "";
   populateClientOptions();
   clientSelect.value = "";
